@@ -1,6 +1,6 @@
 {
   "id": "b41b9039-8082-41d5-a340-791ec35925fa",
-  "realm": "realm",
+  "realm": "${KC_REALM_NAME}",
   "notBefore": 0,
   "defaultSignatureAlgorithm": "RS256",
   "revokeRefreshToken": false,
@@ -291,7 +291,7 @@
       ],
       "security-admin-console": [],
       "admin-cli": [],
-      "dendrite.ai-project": [
+      "${KC_CLIENT_ID}": [
         {
           "id": "d2a142a0-6a36-4d91-820c-24c4b78b0a63",
           "name": "uma_protection",
@@ -447,17 +447,17 @@
   "users": [
     {
       "id": "d56608e5-e24e-4b28-accb-68cc13f89c01",
-      "username": "service-account-dendrite.ai-project",
+      "username": "service-account-${KC_CLIENT_ID}",
       "emailVerified": false,
       "createdTimestamp": 1736068816799,
       "enabled": true,
       "totp": false,
-      "serviceAccountClientId": "dendrite.ai-project",
+      "serviceAccountClientId": "${KC_CLIENT_ID}",
       "disableableCredentialTypes": [],
       "requiredActions": [],
       "realmRoles": ["default-roles-realm"],
       "clientRoles": {
-        "dendrite.ai-project": ["uma_protection"]
+        "${KC_CLIENT_ID}": ["uma_protection"]
       },
       "notBefore": 0,
       "groups": []
@@ -483,12 +483,12 @@
       "clientId": "account",
       "name": "${client_account}",
       "rootUrl": "${authBaseUrl}",
-      "baseUrl": "/realms/realm/account/",
+      "baseUrl": "/realms/${KC_REALM_NAME}/account/",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "redirectUris": ["/realms/realm/account/*"],
+      "redirectUris": ["/realms/${KC_REALM_NAME}/account/*"],
       "webOrigins": [],
       "notBefore": 0,
       "bearerOnly": false,
@@ -528,12 +528,12 @@
       "clientId": "account-console",
       "name": "${client_account-console}",
       "rootUrl": "${authBaseUrl}",
-      "baseUrl": "/realms/realm/account/",
+      "baseUrl": "/realms/${KC_REALM_NAME}/account/",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "redirectUris": ["/realms/realm/account/*"],
+      "redirectUris": ["/realms/${KC_REALM_NAME}/account/*"],
       "webOrigins": [],
       "notBefore": 0,
       "bearerOnly": false,
@@ -666,8 +666,8 @@
     },
     {
       "id": "d3b68c88-8c8e-48f1-bf12-980e4626ac3a",
-      "clientId": "dendrite.ai-project",
-      "name": "Dendrite AI Project",
+      "clientId": "${KC_CLIENT_ID}",
+      "name": "${KC_CLIENT_NAME}",
       "description": "",
       "rootUrl": "",
       "adminUrl": "",
@@ -676,7 +676,7 @@
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "secret": "**********",
+      "secret": "${KC_CLIENT_SECRET}",
       "redirectUris": [
         "http://localhost:3000/*",
         "https://www.keycloak.org/app/*"
@@ -772,7 +772,7 @@
         "resources": [
           {
             "name": "Default Resource",
-            "type": "urn:dendrite.ai-project:resources:default",
+            "type": "urn:${KC_CLIENT_ID}:resources:default",
             "ownerManagedAccess": false,
             "attributes": {},
             "uris": ["/*"]
@@ -796,7 +796,7 @@
             "logic": "POSITIVE",
             "decisionStrategy": "UNANIMOUS",
             "config": {
-              "defaultResourceType": "urn:dendrite.ai-project:resources:default",
+              "defaultResourceType": "urn:${KC_CLIENT_ID}:resources:default",
               "applyPolicies": "[\"Default Policy\"]"
             }
           }
@@ -852,12 +852,12 @@
       "clientId": "security-admin-console",
       "name": "${client_security-admin-console}",
       "rootUrl": "${authAdminUrl}",
-      "baseUrl": "/admin/realm/console/",
+      "baseUrl": "/admin/${KC_REALM_NAME}/console/",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "redirectUris": ["/admin/realm/console/*"],
+      "redirectUris": ["/admin/${KC_REALM_NAME}/console/*"],
       "webOrigins": ["+"],
       "notBefore": 0,
       "bearerOnly": false,

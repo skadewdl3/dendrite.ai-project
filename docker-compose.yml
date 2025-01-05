@@ -35,6 +35,11 @@ services:
       - KC_DB_PASSWORD=password
       - KC_HOSTNAME=localhost
 
+      - KC_CLIENT_SECRET=QUykrywkGszhxxYgsSBtSNtHsFIWaYHK
+      - "KC_CLIENT_ID=dendrite.ai-project"
+      - KC_CLIENT_NAME=Dendrite AI Project
+      - KC_REALM_NAME=realm
+
     volumes:
       - ./keycloak-config.json:/opt/keycloak/data/import/keycloak-config.json
     ports:
