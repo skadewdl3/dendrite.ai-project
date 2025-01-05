@@ -8,7 +8,8 @@
     "start": "next start",
     "up": "docker volume prune -f && docker compose up",
     "down": "docker compose down",
-    "lint": "next lint"
+    "lint": "next lint",
+    "migrate": "bunx drizzle-kit push"
   },
   "dependencies": {
     "better-auth": "^1.1.10",
