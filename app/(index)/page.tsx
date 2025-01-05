@@ -1,10 +1,14 @@
-import { Board, db } from "@db";
-import Home from "./Home";
+import { Board, db, arrayOverlaps, eq } from "@db";
+import Home from "@/components/home/Home";
 import { auth } from "@auth/server";
 import { headers } from "next/headers";
-import { CreateBoardInput, CreateBoardResponse } from "@types/board";
-import { arrayOverlaps } from "drizzle-orm";
-import HomeUnauthorized from "./HomeUnauthorized";
+import {
+  CreateBoardInput,
+  CreateBoardResponse,
+  DeleteBoardInput,
+  DeleteBoardResponse,
+} from "@types/board";
+import HomeUnauthorized from "@/components/home/HomeUnauthorized";
 
 export default async function HomePage() {
   const sessionData = await auth.api.getSession({
@@ -28,13 +32,23 @@ export default async function HomePage() {
 
     console.log(data);
 
-    return { success: false, error: "bruh" };
-
     const { user } = sessionData;
     const res = await db
       .insert(Board)
-      .values({ name, members: [user.id], updatedAt: new Date() })
+      .values({ ...data, members: [user.id], updatedAt: new Date() })
       .returning();
+
+    return { success: true, data: res };
+  };
+
+  const deleteBoardAction = async ({
+    id,
+  }: DeleteBoardInput): Promise<DeleteBoardResponse> => {
+    "use server";
+
+    if (id < 0) return { success: false, error: "Board ID cannot be negative" };
+
+    const res = await db.delete(Board).where(eq(Board.id, id)).returning();
 
     return { success: true, data: res };
   };
@@ -47,5 +61,11 @@ export default async function HomePage() {
     .from(Board)
     .where(arrayOverlaps(Board.members, [user.id]));
 
-  return <Home createBoardAction={createBoardAction} boards={boards} />;
+  return (
+    <Home
+      createBoardAction={createBoardAction}
+      deleteBoardAction={deleteBoardAction}
+      boards={boards}
+    />
+  );
 }

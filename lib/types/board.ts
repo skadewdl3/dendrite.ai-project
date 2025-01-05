@@ -8,3 +8,9 @@ export type CreateBoardResponse =
 export type Board = InferSelectModel<typeof Board>;
 
 export type CreateBoardInput = Pick<Board, "name" | "description" | "public">;
+
+export type DeleteBoardResponse =
+  | { success: true; data: object }
+  | { success: false; error: string };
+
+export type DeleteBoardInput = Pick<Board, "id">;

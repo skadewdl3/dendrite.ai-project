@@ -8,6 +8,7 @@
  */
 
 import { drizzle } from "drizzle-orm/node-postgres";
+export * from "drizzle-orm";
 
 // Make sure to update this list if we need to add/remove any schemas
 export * from "./schema/auth";

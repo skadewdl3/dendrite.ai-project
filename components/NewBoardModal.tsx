@@ -7,11 +7,13 @@ type Props = {
   show: boolean;
   handleClose: () => void;
   handleSubmit: (data: CreateBoardInput) => void;
+  loading: boolean;
 };
 export default function NewBoardModal({
   show,
   handleClose,
   handleSubmit,
+  loading,
 }: Props) {
   return (
     <Modal show={show} onHide={handleClose}>
@@ -61,8 +63,15 @@ export default function NewBoardModal({
           <Button variant="secondary" onClick={handleClose}>
             Cancel
           </Button>
-          <Button variant="primary" type="submit">
-            Create Board
+          <Button variant="primary" type="submit" disabled={loading}>
+            {loading ? (
+              <>
+                <span className="spinner-border spinner-border-sm me-2" />
+                Creating...
+              </>
+            ) : (
+              "Create Board"
+            )}
           </Button>
         </Modal.Footer>
       </Form>
