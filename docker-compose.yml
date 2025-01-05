@@ -1,0 +1,50 @@
+version: "3"
+services:
+  postgres_keycloak:
+    image: postgres:latest
+    restart: always
+    environment:
+      - POSTGRES_DB=keycloak_db
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_keycloak_data:/var/lib/postgresql/data
+
+  postgres_app:
+    image: postgres:latest
+    restart: always
+    environment:
+      - POSTGRES_DB=app_db
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=password
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_app_data:/var/lib/postgresql/data
+
+  keycloak:
+    image: keycloak/keycloak:latest
+    environment:
+      - KC_BOOTSTRAP_ADMIN_USERNAME=admin
+      - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
+      - KC_DB=postgres
+      - KC_DB_URL=jdbc:postgresql://postgres_keycloak:5432/keycloak_db
+      - KC_DB_USERNAME=admin
+      - KC_DB_PASSWORD=password
+      - KC_HOSTNAME=localhost
+
+    volumes:
+      - ./keycloak-config.json:/opt/keycloak/data/import/keycloak-config.json
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres_keycloak
+    command:
+      - start-dev
+      - --import-realm
+
+volumes:
+  postgres_keycloak_data:
+  postgres_app_data:
