@@ -19,11 +19,6 @@ export default function Controls({ activeControl, setActiveControl }: Props) {
       name: "eraser",
       icon: <Eraser />,
     },
-
-    {
-      name: "bruh",
-      icon: <Eraser />,
-    },
   ];
 
   return (
