@@ -10,10 +10,9 @@ export default function Temp() {
     console.log(response);
   };
 
-  useEffect(() => {
-    console.log("hi");
-    signInTest();
-  });
-
-  return <div>Temp</div>;
+  return (
+    <div>
+      <button onClick={signInTest}>Sign In</button>
+    </div>
+  );
 }

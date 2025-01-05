@@ -32,6 +32,10 @@ export const auth = betterAuth({
   },
   account: {
     modelName: "Account",
+    accountLinking: {
+      enabled: true,
+      trustedProviders: ["keycloak"],
+    },
   },
   verification: {
     modelName: "Verification",

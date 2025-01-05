@@ -1,45 +1,51 @@
-import { pgTable, text, boolean, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, boolean } from "drizzle-orm/pg-core";
 
-export const User = pgTable("user", {
+export const User = pgTable("_user", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
-  email: text("email").notNull(),
+  email: text("email").notNull().unique(),
   emailVerified: boolean("email_verified").notNull(),
+  image: text("image"),
   createdAt: timestamp("created_at").notNull(),
   updatedAt: timestamp("updated_at").notNull(),
 });
 
-export const Session = pgTable("session", {
+export const Session = pgTable("_session", {
   id: text("id").primaryKey(),
-  userId: text("user_id").references(() => User.id),
-  token: text("token").notNull(),
   expiresAt: timestamp("expires_at").notNull(),
+  token: text("token").notNull().unique(),
+  createdAt: timestamp("created_at").notNull(),
+  updatedAt: timestamp("updated_at").notNull(),
   ipAddress: text("ip_address"),
   userAgent: text("user_agent"),
-  createdAt: timestamp("created_at").notNull(),
-  updatedAt: timestamp("updated_at").notNull(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => User.id),
 });
 
-export const Account = pgTable("account", {
+export const Account = pgTable("_account", {
   id: text("id").primaryKey(),
-  userId: text("user_id").references(() => User.id),
   accountId: text("account_id").notNull(),
   providerId: text("provider_id").notNull(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => User.id),
   accessToken: text("access_token"),
   refreshToken: text("refresh_token"),
+  idToken: text("id_token"),
   accessTokenExpiresAt: timestamp("access_token_expires_at"),
   refreshTokenExpiresAt: timestamp("refresh_token_expires_at"),
   scope: text("scope"),
   password: text("password"),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
-  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  createdAt: timestamp("created_at").notNull(),
+  updatedAt: timestamp("updated_at").notNull(),
 });
 
-export const Verification = pgTable("verification", {
+export const Verification = pgTable("_verification", {
   id: text("id").primaryKey(),
   identifier: text("identifier").notNull(),
   value: text("value").notNull(),
   expiresAt: timestamp("expires_at").notNull(),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
-  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  createdAt: timestamp("created_at"),
+  updatedAt: timestamp("updated_at"),
 });
