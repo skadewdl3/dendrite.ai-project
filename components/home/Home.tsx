@@ -108,6 +108,7 @@ export default function Temp({
                         className="d-flex align-items-center justify-content-center"
                         style={{ width: "38px", height: "38px", padding: 0 }}
                         disabled={deleting && deletingId === board.id}
+                        href={`/board/${board.id}`}
                       >
                         <BoxArrowUpRight />
                       </Button>
