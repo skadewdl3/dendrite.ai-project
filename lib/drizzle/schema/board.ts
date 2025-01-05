@@ -8,16 +8,15 @@
  * After modifying this file, make sure to run "bun migrate" to update the database schema.
  */
 
-import { pgTable, text, timestamp, boolean } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, serial } from "drizzle-orm/pg-core";
 import { User } from "./auth";
 
 export const Board = pgTable("_board", {
-  id: text("id").primaryKey(),
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
   members: text("members")
-    .array()
-    .$type<string[]>()
     .references(() => User.id)
-    .notNull(),
-  createdAt: timestamp("created_at").notNull(),
-  updatedAt: timestamp("updated_at").notNull(),
+    .array(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });

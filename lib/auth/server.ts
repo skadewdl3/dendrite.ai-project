@@ -1,6 +1,7 @@
 import { betterAuth } from "better-auth";
 import { genericOAuth } from "better-auth/plugins";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { nextCookies } from "better-auth/next-js";
 import { db, User, Session, Verification, Account } from "@db";
 import "@env";
 
@@ -29,6 +30,7 @@ export const auth = betterAuth({
         },
       ],
     }),
+    nextCookies(),
   ],
 
   // Out schema models use different names than the default, so we need to specify them here
