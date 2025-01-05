@@ -1,34 +1,36 @@
-import { Board, db, User } from "@db";
-import Temp from "./Temp";
+import { Board, db } from "@db";
+import Home from "./Home";
 import { auth } from "@auth/server";
 import { headers } from "next/headers";
-import { CreateBoardResponse } from "@/lib/types/board";
+import { CreateBoardInput, CreateBoardResponse } from "@types/board";
+import { arrayOverlaps } from "drizzle-orm";
+import HomeUnauthorized from "./HomeUnauthorized";
 
-export default async function Home() {
+export default async function HomePage() {
+  const sessionData = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!sessionData) {
+    return <HomeUnauthorized />;
+  }
+
   const createBoardAction = async (
-    name: string,
+    data: CreateBoardInput,
   ): Promise<CreateBoardResponse> => {
     "use server";
-    const sessionData = await auth.api.getSession({
-      headers: await headers(),
-    });
 
-    if (!sessionData)
-      return {
-        success: false,
-        error: "You must be logged in to create a board",
-      };
-
-    if (name.trim().length == 0)
+    if (data.name.trim().length == 0)
       return {
         success: false,
         error: "Board name cannot be empty",
       };
 
+    console.log(data);
+
+    return { success: false, error: "bruh" };
+
     const { user } = sessionData;
-
-    console.log(user);
-
     const res = await db
       .insert(Board)
       .values({ name, members: [user.id], updatedAt: new Date() })
@@ -37,10 +39,13 @@ export default async function Home() {
     return { success: true, data: res };
   };
 
-  // const data = JSON.stringify(res);
-  return (
-    <div>
-      <Temp createBoardAction={createBoardAction} />
-    </div>
-  );
+  const { user } = sessionData;
+
+  // fetch boards which the user owns/is a member of
+  const boards = await db
+    .select()
+    .from(Board)
+    .where(arrayOverlaps(Board.members, [user.id]));
+
+  return <Home createBoardAction={createBoardAction} boards={boards} />;
 }

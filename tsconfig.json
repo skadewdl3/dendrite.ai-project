@@ -22,7 +22,8 @@
       "@/*": ["./*"],
       "@db": ["./lib/drizzle/db.ts"],
       "@auth/*": ["./lib/auth/*"],
-      "@env": ["./lib/env.ts"]
+      "@env": ["./lib/env.ts"],
+      "@types/*": ["./lib/types/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

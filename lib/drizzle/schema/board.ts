@@ -8,7 +8,7 @@
  * After modifying this file, make sure to run "bun migrate" to update the database schema.
  */
 
-import { pgTable, text, timestamp, serial } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, serial, boolean } from "drizzle-orm/pg-core";
 import { User } from "./auth";
 
 export const Board = pgTable("_board", {
@@ -16,7 +16,10 @@ export const Board = pgTable("_board", {
   name: text("name").notNull(),
   members: text("members")
     .references(() => User.id)
-    .array(),
+    .array()
+    .notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  public: boolean("public").default(false).notNull(),
+  description: text("description"),
 });
