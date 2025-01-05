@@ -1,36 +1,21 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Project Title
 
-## Getting Started
+## Description
+This code is submitted as a work sample for evaluation as part of the internship application process at Dendrite.ai. It demonstrates my skills in [briefly describe the functionality of the project, e.g., "building a responsive web application" or "implementing machine learning algorithms"].
 
-First, run the development server:
+## License and Usage Restrictions
+This code is proprietary and is provided solely for the purpose of evaluation by Dendrite.ai.
+This project uses third-party libraries, which are subject to their respective licenses. These libraries retain their original licenses and are not covered under the restrictions outlined in this repository. For details, refer to the `package.json` file or the documentation of each library.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### Restrictions:
+1. **Evaluation Use Only**: This code may only be used to assess my qualifications for the internship position. Any other use, including but not limited to distribution, reproduction, modification, or deployment, is strictly prohibited without my prior written consent. For the legalese, take a look at the LICENSE file..
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. **No Commercial Use**: This code may not be used for any commercial purposes.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. **No Derivative Works**: Modifying the code or creating derivative works is not permitted without explicit permission.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Disclaimer
+By accessing this repository, you agree to abide by the restrictions and terms outlined above. Unauthorized use of the code may result in legal action.
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Contact
+For questions or further clarification, please reach out to me at [sohamk10@gmail.com](mailto:sohamk10@gmail.com).
