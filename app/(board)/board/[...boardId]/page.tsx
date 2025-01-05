@@ -1,5 +1,6 @@
 import { db, Board, eq } from "@db";
 import Button from "react-bootstrap/Button";
+import BoardComponent from "@/components/board/Board";
 
 export default async function BoardPage({
   params: paramsPromise,
@@ -33,5 +34,5 @@ export default async function BoardPage({
     );
   }
 
-  return <div> {boardId}</div>;
+  return <BoardComponent id={boardId} />;
 }

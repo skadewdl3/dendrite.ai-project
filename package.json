@@ -12,6 +12,8 @@
     "migrate": "bunx drizzle-kit push"
   },
   "dependencies": {
+    "@emotion/css": "^11.13.5",
+    "@emotion/react": "^11.14.0",
     "@types/ws": "^8.5.13",
     "better-auth": "^1.1.10",
     "bootstrap": "^5.3.3",
