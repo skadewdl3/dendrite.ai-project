@@ -21,7 +21,8 @@
     "paths": {
       "@/*": ["./*"],
       "@db": ["./lib/drizzle/db.ts"],
-      "@auth/*": ["./lib/auth/*"]
+      "@auth/*": ["./lib/auth/*"],
+      "@env": ["./lib/env.ts"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
