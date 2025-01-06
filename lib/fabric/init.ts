@@ -1,5 +1,6 @@
-import { Canvas, Rect, util } from "fabric";
+import { Canvas, FabricObject, Rect, util } from "fabric";
 import { pushToUndoStack } from "./undo-redo";
+import { v4 as uuid } from "uuid";
 
 export const setupCanvas = (
   canvasElement: HTMLCanvasElement,
@@ -7,6 +8,7 @@ export const setupCanvas = (
   height: number,
 ) => {
   console.log(width, height);
+  FabricObject.customProperties = ["id"];
   const canvas = new Canvas(canvasElement);
   canvas.setDimensions({ width, height });
   canvas.add(new Rect({ width: 20, height: 20, fill: "#ff0000" }));
@@ -20,7 +22,8 @@ export const setupCanvasListeners = (canvas: Canvas, socket: WebSocket) => {
   canvas.on("object:added", (e) => {
     if (stopEvents) return;
 
-    // add object to undo stack
+    // custom ID property for tracking object changes
+    e.target.id = uuid();
     pushToUndoStack(e.target);
 
     socket.send(
@@ -29,6 +32,7 @@ export const setupCanvasListeners = (canvas: Canvas, socket: WebSocket) => {
         data: e.target.toJSON(),
       }),
     );
+    console.log(e.target);
   });
 
   canvas.on("object:removed", (e) => {
@@ -68,7 +72,11 @@ const canvasRemove = async (canvas: Canvas, changes: object) => {
   setEvents(false);
   console.log(changes);
   const objects = await util.enlivenObjects([changes]);
-  objects.forEach((obj) => canvas.remove(obj));
+  objects.forEach(({ id }) => {
+    const toRemove = canvas._objects.find((obj) => obj.id == id);
+    if (!toRemove) return;
+    canvas.remove(toRemove);
+  });
   canvas.renderAll();
   setEvents(true);
 };
