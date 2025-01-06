@@ -61,6 +61,8 @@ export default async function HomePage() {
     .from(Board)
     .where(arrayOverlaps(Board.members, [user.id]));
 
+  console.log(boards);
+
   return (
     <Home
       createBoardAction={createBoardAction}

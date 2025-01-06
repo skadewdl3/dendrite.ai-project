@@ -56,7 +56,7 @@ async function validateRequest(
 }
 
 const connections = new Map<string, import("ws").WebSocket>();
-const boardMembers = new Map<number, string[]>();
+const boardMembers = new Map<number, Set<string>>();
 
 export async function SOCKET(
   client: import("ws").WebSocket,
@@ -72,22 +72,33 @@ export async function SOCKET(
 
   const { userId, boardId } = res;
 
-  if (!boardMembers.has(boardId)) {
-    boardMembers.set(boardId, [userId]);
-  } else {
-    const clients = boardMembers.get(boardId) || [];
-    clients.push(userId);
-    boardMembers.set(boardId, clients);
-  }
+  const clients = boardMembers.get(boardId) || new Set();
+  clients.add(userId);
+  boardMembers.set(boardId, clients);
 
+  client.userId = userId;
   connections.set(userId, client);
 
   client.on("message", (message) => {
-    const clients = boardMembers.get(boardId) || [];
-    for (const userId of clients) {
-      const client = connections.get(userId);
-      client?.send(message);
-    }
+    console.log(message);
+
+    const connectedClients = boardMembers.get(boardId);
+    if (!connectedClients) return;
+    server.clients.forEach((ws) => {
+      if (connectedClients.has(ws.userId) && client.userId !== ws.userId) {
+        console.log("sending memessage to ", ws.userId);
+        ws.send(message);
+      }
+    });
+
+    // const clients = boardMembers.get(boardId) || [];
+    // console.log(message.toString());
+    // let i = 0;
+    // for (const userId of clients) {
+    //   const client = connections.get(userId);
+    //   console.log("sending message", i);
+    //   i += 1;
+    // }
   });
 
   client.on("close", () => {

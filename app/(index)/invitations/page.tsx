@@ -1,4 +1,4 @@
-import { Invitation, db, eq, and } from "@db";
+import { Invitation, db, eq, and, Board } from "@db";
 import Invitations from "@/components/invitations/Invitations";
 import { auth } from "@auth/server";
 import { headers } from "next/headers";
@@ -28,6 +28,23 @@ export default async function HomePage() {
           eq(Invitation.to, user.id),
         ),
       );
+
+    const memberData = await db
+      .select({ members: Board.members })
+      .from(Board)
+      .where(eq(Board.id, invitation.boardId));
+
+    if (memberData.length == 0) {
+      return;
+    }
+
+    await db
+      .update(Board)
+      .set({
+        members: [...memberData[0].members, user.id],
+        updatedAt: new Date(),
+      })
+      .where(eq(Board.id, invitation.boardId));
   };
 
   const rejectInvitation = async (invitation: InvitationType) => {
@@ -54,8 +71,8 @@ export default async function HomePage() {
   return (
     <Invitations
       invitations={invitations}
-      accpetInvitation={acceptInvitation}
-      rejectInvitation={rejectInvitation}
+      accpetInvitationAction={acceptInvitation}
+      rejectInvitationAction={rejectInvitation}
     />
   );
 }
