@@ -1,18 +1,21 @@
 import { Canvas } from "fabric";
 
-const undoStack: object[] = [];
-const redoStack: object[] = [];
+let undoStack: object[] = [];
+let redoStack: object[] = [];
 
 export const pushToUndoStack = (changes: object) => {
   undoStack.push(changes);
 };
 
+export const setUndoStack = (val: object[]) => (undoStack = val);
+
 export const pushToRedoStack = (changes: object) => {
   redoStack.push(changes);
 };
 
+export const setRedoStack = (val: object[]) => (redoStack = val);
+
 const undo = (canvas: Canvas) => {
-  console.log("undoing", undoStack);
   if (undoStack.length == 0) return;
   const changes = undoStack.pop();
 
@@ -23,7 +26,14 @@ const undo = (canvas: Canvas) => {
 };
 
 const redo = (canvas: Canvas) => {
-  console.log("redoing", redoStack);
+  if (redoStack.length == 0) return;
+
+  const changes = redoStack.pop();
+
+  canvas.add(changes);
+  canvas.renderAll();
+
+  pushToUndoStack(changes);
   // pop off the redo stack
   //
   // apply change

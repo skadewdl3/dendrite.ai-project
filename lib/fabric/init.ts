@@ -1,5 +1,5 @@
 import { Canvas, FabricObject, Rect, util } from "fabric";
-import { pushToUndoStack } from "./undo-redo";
+import { pushToUndoStack, setRedoStack } from "./undo-redo";
 import { v4 as uuid } from "uuid";
 
 export const setupCanvas = (
@@ -25,6 +25,7 @@ export const setupCanvasListeners = (canvas: Canvas, socket: WebSocket) => {
     // custom ID property for tracking object changes
     e.target.id = uuid();
     pushToUndoStack(e.target);
+    setRedoStack([]);
 
     socket.send(
       JSON.stringify({
