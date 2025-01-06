@@ -1,5 +1,11 @@
 "import client";
-import { Pen, Eraser, Chat } from "react-bootstrap-icons";
+import {
+  Pen,
+  Eraser,
+  Chat,
+  ArrowClockwise,
+  ArrowCounterclockwise,
+} from "react-bootstrap-icons";
 import Button from "react-bootstrap/Button";
 import type { ControlType } from "@types/control";
 import { ReactNode } from "react";
@@ -34,6 +40,16 @@ export default function Controls({
 
   const staticControls = 1;
 
+  const undo = () => {
+    const event = new Event("undo");
+    document.dispatchEvent(event);
+  };
+
+  const redo = () => {
+    const event = new Event("redo");
+    document.dispatchEvent(event);
+  };
+
   return (
     <div className="d-flex position-relative" style={{ gap: "10px" }}>
       {controls.map((control, index) => (
@@ -52,6 +68,33 @@ export default function Controls({
         </Tooltip>
       ))}
 
+      <Tooltip text="Undo">
+        <Button
+          onClick={undo}
+          variant="light"
+          className="d-flex align-items-center justify-content-center"
+          style={{
+            width: "40px",
+            height: "40px",
+          }}
+        >
+          <ArrowCounterclockwise />
+        </Button>
+      </Tooltip>
+      <Tooltip text="Redo">
+        <Button
+          onClick={redo}
+          variant="light"
+          className="d-flex align-items-center justify-content-center"
+          style={{
+            width: "40px",
+            height: "40px",
+          }}
+        >
+          <ArrowClockwise />
+        </Button>
+      </Tooltip>
+
       <Tooltip text="Chat">
         <Button
           onClick={toggleChat}
@@ -66,7 +109,6 @@ export default function Controls({
           <Chat />
         </Button>
       </Tooltip>
-
       <div
         className="position-absolute"
         style={{

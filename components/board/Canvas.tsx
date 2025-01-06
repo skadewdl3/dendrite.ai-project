@@ -1,5 +1,9 @@
 import { setFreeDrawing } from "@/lib/fabric/drawing";
 import { setupCanvas, setupCanvasListeners } from "@/lib/fabric/init";
+import {
+  removeDocumentListeners,
+  setupDocumentListeners,
+} from "@/lib/fabric/undo-redo";
 import { ControlType } from "@/lib/types/control";
 import { Canvas as FabricCanvas } from "fabric";
 import { useWebSocket } from "next-ws/client";
@@ -23,10 +27,12 @@ export default function Canvas({ tool }: Props) {
     const canvasContext = setupCanvas(canvasEl.current, width, height);
     setFreeDrawing(canvasContext, true, tool);
     setCanvas(canvasContext);
+    setupDocumentListeners(canvasContext);
     setupCanvasListeners(canvasContext, ws as WebSocket);
 
     return () => {
-      canvas?.dispose();
+      removeDocumentListeners(canvasContext);
+      canvasContext.dispose();
       setCanvas(null);
     };
   }, []);

@@ -1,4 +1,5 @@
-import { Canvas, Path, Rect, util } from "fabric";
+import { Canvas, Rect, util } from "fabric";
+import { pushToUndoStack } from "./undo-redo";
 
 export const setupCanvas = (
   canvasElement: HTMLCanvasElement,
@@ -12,17 +13,33 @@ export const setupCanvas = (
   return canvas;
 };
 
+let stopEvents = false;
+export const setEvents = (enable: boolean) => (stopEvents = !enable);
+
 export const setupCanvasListeners = (canvas: Canvas, socket: WebSocket) => {
-  let stopEvents = false;
   canvas.on("object:added", (e) => {
     if (stopEvents) return;
+
+    // add object to undo stack
+    pushToUndoStack(e.target);
+
     socket.send(
       JSON.stringify({
-        type: "canvas",
+        type: "canvas:add",
         data: e.target.toJSON(),
       }),
     );
-    console.log(e);
+  });
+
+  canvas.on("object:removed", (e) => {
+    console.log("this ran", e);
+    if (stopEvents) return;
+    socket.send(
+      JSON.stringify({
+        type: "canvas:remove",
+        data: e.target.toJSON(),
+      }),
+    );
   });
 
   socket.addEventListener("message", async (event) => {
@@ -30,15 +47,28 @@ export const setupCanvasListeners = (canvas: Canvas, socket: WebSocket) => {
       typeof event.data === "string" ? event.data : await event.data.text();
 
     const { type, data: changes } = JSON.parse(message);
-    if (type != "canvas") return;
+    if (type == "canvas:add") await canvasAdd(canvas, changes);
+    else if (type == "canvas:remove") await canvasRemove(canvas, changes);
 
     // const path = new Path(changes);
-    const objects = await util.enlivenObjects([changes]);
-    stopEvents = true;
-    objects.forEach((obj) => canvas.add(obj));
-    canvas.renderAll();
-    stopEvents = false;
-
-    console.log("changes: ", changes);
   });
+};
+
+const canvasAdd = async (canvas: Canvas, changes: object) => {
+  const objects = await util.enlivenObjects([changes]);
+  setEvents(false);
+  objects.forEach((obj) => canvas.add(obj));
+  canvas.renderAll();
+  setEvents(true);
+
+  console.log("changes: ", changes);
+};
+
+const canvasRemove = async (canvas: Canvas, changes: object) => {
+  setEvents(false);
+  console.log(changes);
+  const objects = await util.enlivenObjects([changes]);
+  objects.forEach((obj) => canvas.remove(obj));
+  canvas.renderAll();
+  setEvents(true);
 };
