@@ -8,6 +8,7 @@ import InviteModal from "./InviteModal";
 import ChatWindow from "./ChatWindow";
 import { ControlType } from "@/lib/types/control";
 import Canvas from "./Canvas";
+import Offcanvas from "react-bootstrap/Offcanvas";
 
 type Props = {
   id: number;
@@ -15,8 +16,9 @@ type Props = {
 };
 
 export default function Board({ id, inviteMemberAction }: Props) {
-  const [activeControl, setActiveControl] = useState<ControlType>("pen");
+  const [activeControl, setActiveControl] = useState<ControlType>("pencil");
   const [showInviteModal, setShowInviteModal] = useState(false);
+  const [showChat, setShowChat] = useState(false);
 
   const openInviteModal = () => setShowInviteModal(true);
   useEffect(() => {
@@ -35,12 +37,37 @@ export default function Board({ id, inviteMemberAction }: Props) {
         handleSubmit={inviteMemberAction}
         loading={false}
       />
-      <ChatWindow />
-      <Canvas />
-      <div style={{ width: "50%" }}>
+
+      <Canvas tool={activeControl} />
+      <Offcanvas
+        show={showChat}
+        onHide={() => setShowChat(false)}
+        backdrop={false}
+        placement="end"
+      >
+        <Offcanvas.Header closeButton>
+          <Offcanvas.Title className="fw-bold">Chat</Offcanvas.Title>
+        </Offcanvas.Header>
+        <Offcanvas.Body>
+          <ChatWindow />
+        </Offcanvas.Body>
+      </Offcanvas>
+      <div
+        className="position-fixed d-flex"
+        style={{
+          left: "50%",
+          transform: "translateX(-50%)",
+          bottom: "10px",
+          border: "1px solid #ccc",
+          padding: "10px",
+          borderRadius: "5px",
+        }}
+      >
         <Controls
           setActiveControl={setActiveControl}
           activeControl={activeControl}
+          toggleChat={() => setShowChat(!showChat)}
+          chatOpen={showChat}
         />
       </div>
     </WebSocketProvider>

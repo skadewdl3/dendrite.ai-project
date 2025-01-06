@@ -31,7 +31,7 @@ export default function ChatWindow() {
   };
 
   return (
-    <div className="d-flex flex-column" style={{ height: "400px" }}>
+    <div className="d-flex flex-column" style={{ height: "100%" }}>
       <div
         className="flex-grow-1 p-3 bg-light border rounded mb-2"
         style={{ overflowY: "auto" }}
@@ -42,7 +42,7 @@ export default function ChatWindow() {
           ))}
         </div>
       </div>
-      <div className="d-flex">
+      <div className="d-flex" style={{}}>
         <input
           type="text"
           className="form-control me-2"

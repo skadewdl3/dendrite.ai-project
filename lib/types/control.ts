@@ -1,1 +1,1 @@
-export type ControlType = "pen" | "eraser";
+export type ControlType = "pencil" | "eraser";

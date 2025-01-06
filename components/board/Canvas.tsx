@@ -1,38 +1,42 @@
-import { Canvas as FabricCanvas, Rect } from "fabric";
+import { setFreeDrawing } from "@/lib/fabric/drawing";
+import { setupCanvas, setupCanvasListeners } from "@/lib/fabric/init";
+import { ControlType } from "@/lib/types/control";
+import { Canvas as FabricCanvas } from "fabric";
 import { useEffect, useRef, useState } from "react";
 
-const setupCanvas = (
-  canvasElement: HTMLCanvasElement,
-  width: number,
-  height: number,
-) => {
-  console.log(width, height);
-  const canvas = new FabricCanvas(canvasElement);
-  canvas.setDimensions({ width, height });
-  canvas.add(new Rect({ width: 20, height: 20, fill: "#ff0000" }));
-  // canvas.backgroundColor = "#ff0000";
-  return canvas;
+type Props = {
+  tool: ControlType;
 };
 
-export default function Canvas() {
-  const canvas = useRef(null);
+export default function Canvas({ tool }: Props) {
+  const canvasEl = useRef(null);
   const canvasContainer = useRef(null);
-  const [context, setContext] = useState<FabricCanvas | null>(null);
+  const [canvas, setCanvas] = useState<FabricCanvas | null>(null);
 
   useEffect(() => {
-    if (!canvas.current || !canvasContainer.current) return;
+    if (!canvasEl.current || !canvasContainer.current) return;
     const style = getComputedStyle(canvasContainer.current);
     const width = parseInt(style.getPropertyValue("width"));
     const height = parseInt(style.getPropertyValue("height"));
-    const canvasContext = setupCanvas(canvas.current, width, height);
-    setContext(canvasContext);
+    const canvasContext = setupCanvas(canvasEl.current, width, height);
+    setFreeDrawing(canvasContext, true, tool);
+    setCanvas(canvasContext);
+    setupCanvasListeners(canvasContext);
 
     return () => {
-      console.log("this ran");
-      context?.dispose();
-      setContext(null);
+      canvas?.dispose();
+      setCanvas(null);
     };
   }, []);
+
+  useEffect(() => {
+    if (!canvas) return;
+    if (tool != "pencil" && tool != "eraser") {
+      setFreeDrawing(canvas, false);
+      return;
+    }
+    setFreeDrawing(canvas, true, tool);
+  }, [canvas, tool]);
 
   return (
     <div
@@ -42,12 +46,11 @@ export default function Canvas() {
         position: "absolute",
         top: 0,
         left: 0,
-        zIndex: 20,
         marginTop: "56px",
       }}
       ref={canvasContainer}
     >
-      <canvas ref={canvas} />
+      <canvas ref={canvasEl} />
     </div>
   );
 }

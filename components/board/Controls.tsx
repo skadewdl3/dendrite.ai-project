@@ -1,43 +1,42 @@
 "import client";
-import { Pen, Eraser } from "react-bootstrap-icons";
+import { Pen, Eraser, Chat } from "react-bootstrap-icons";
 import Button from "react-bootstrap/Button";
 import type { ControlType } from "@types/control";
+import { ReactNode } from "react";
+import Tooltip from "@/components/Tooltip";
 
 type Props = {
   activeControl: ControlType;
   setActiveControl: (control: ControlType) => void;
+  toggleChat: () => void;
+  chatOpen: boolean;
 };
 
-export default function Controls({ activeControl, setActiveControl }: Props) {
-  const controls = [
-    {
-      name: "pen",
-
-      icon: <Pen />,
-    },
-    {
-      name: "eraser",
-      icon: <Eraser />,
-    },
-  ];
+export default function Controls({
+  activeControl,
+  setActiveControl,
+  toggleChat,
+  chatOpen,
+}: Props) {
+  const controls: Array<{ name: ControlType; label: string; icon: ReactNode }> =
+    [
+      {
+        name: "pencil",
+        label: "Pencil",
+        icon: <Pen />,
+      },
+      {
+        name: "eraser",
+        label: "Eraser",
+        icon: <Eraser />,
+      },
+    ];
 
   return (
-    <div
-      className="position-fixed"
-      style={{
-        left: "50%",
-        transform: "translateX(-50%)",
-        bottom: "10px",
-        border: "1px solid #ccc",
-        padding: "10px",
-        borderRadius: "5px",
-      }}
-    >
-      {/* {`${(controls.findIndex((x) => x.name == activeControl) / controls.length) * 100}%`} */}
-      <div className="d-flex position-relative" style={{ gap: "10px" }}>
-        {controls.map((control, index) => (
+    <div className="d-flex position-relative" style={{ gap: "10px" }}>
+      {controls.map((control, index) => (
+        <Tooltip text={control.label} key={index}>
           <Button
-            key={index}
             onClick={() => setActiveControl(control.name)}
             variant="light"
             className="d-flex align-items-center justify-content-center"
@@ -48,21 +47,36 @@ export default function Controls({ activeControl, setActiveControl }: Props) {
           >
             {control.icon}
           </Button>
-        ))}
+        </Tooltip>
+      ))}
 
-        <div
-          className="position-absolute"
+      <Tooltip text="Chat">
+        <Button
+          onClick={toggleChat}
+          variant="light"
+          className="d-flex align-items-center justify-content-center"
           style={{
-            height: "5px",
             width: "40px",
-            background: "#0d6efd",
-            bottom: "-5px",
-            left: `calc(${(controls.findIndex((x) => x.name == activeControl) / controls.length) * 100}% + ${(controls.findIndex((x) => x.name == activeControl) / controls.length) * 10}px)`,
-            transition: "left 0.3s ease-in-out",
-            borderRadius: "5px",
+            height: "40px",
+            backgroundColor: chatOpen ? "#ccc" : "#fff",
           }}
-        />
-      </div>
+        >
+          <Chat />
+        </Button>
+      </Tooltip>
+
+      <div
+        className="position-absolute"
+        style={{
+          height: "5px",
+          width: "40px",
+          background: "#0d6efd",
+          bottom: "-5px",
+          left: `calc(${(controls.findIndex((x) => x.name == activeControl) / controls.length) * 100}% + ${(controls.findIndex((x) => x.name == activeControl) / controls.length) * 10}px)`,
+          transition: "left 0.3s ease-in-out",
+          borderRadius: "5px",
+        }}
+      />
     </div>
   );
 }

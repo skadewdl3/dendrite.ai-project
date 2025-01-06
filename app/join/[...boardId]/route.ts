@@ -90,21 +90,10 @@ export async function SOCKET(
         ws.send(message);
       }
     });
-
-    // const clients = boardMembers.get(boardId) || [];
-    // console.log(message.toString());
-    // let i = 0;
-    // for (const userId of clients) {
-    //   const client = connections.get(userId);
-    //   console.log("sending message", i);
-    //   i += 1;
-    // }
   });
 
   client.on("close", () => {
-    const clients = boardMembers.get(boardId) || [];
-    const newClients = clients.filter((c) => c !== userId);
-    boardMembers.set(boardId, newClients);
+    boardMembers.get(boardId)?.delete(userId);
     console.log("A client disconnected");
   });
 }
