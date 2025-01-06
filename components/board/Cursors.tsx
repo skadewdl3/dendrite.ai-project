@@ -6,6 +6,7 @@ import { CursorFill } from "react-bootstrap-icons";
 import { throttle } from "underscore";
 
 type CursorData = {
+  id: string;
   color: string;
   x: number;
   y: number;
@@ -21,12 +22,12 @@ export default function Cursors() {
       JSON.stringify({
         type: "mouse:move",
         data: {
-          mouseX: event.clientX,
-          mouseY: event.clientY,
+          x: event.clientX,
+          y: event.clientY,
         },
       }),
     );
-  }, 500);
+  }, 100);
 
   const onMessage = throttle(async (event: MessageEvent) => {
     const message =
@@ -35,11 +36,25 @@ export default function Cursors() {
     const { data, type } = JSON.parse(message);
     if (type == "mouse:move") {
       console.log("mouse update: ", data);
+
+      setClients((clients) => {
+        const existingClient = clients.find((client) => client.id === data.id);
+        if (existingClient) {
+          return clients.map((client) =>
+            client.id === data.id
+              ? { ...client, x: data.x, y: data.y }
+              : client,
+          );
+        } else {
+          return [...clients, data];
+        }
+      });
     } else if (type == "client:disconnect") {
       console.log("remove client", data);
+
+      setClients((clients) => clients.filter((client) => client.id != data.id));
     }
-    // setClients(data);
-  }, 500);
+  }, 100);
 
   useEffect(() => {
     ws?.addEventListener("message", onMessage);
@@ -56,15 +71,28 @@ export default function Cursors() {
   return (
     <>
       {clients.map((data, i) => (
-        <CursorFill
-          key={i}
-          style={{
-            position: "absolute",
-            top: `${data.y}px`,
-            left: `${data.y}px`,
-            transition: "all 0.5s ease-in-out",
-          }}
-        />
+        <div key={i}>
+          <CursorFill
+            fill={data.color}
+            style={{
+              position: "absolute",
+              top: `${data.y}px`,
+              left: `${data.x}px`,
+              transition: "all 0.5s ease-in-out",
+              transform: "scaleX(-1)",
+            }}
+          />
+          <p
+            style={{
+              position: "absolute",
+              top: `${data.y + 10}px`,
+              left: `${data.x}px`,
+              transition: "all 0.5s ease-in-out",
+            }}
+          >
+            {data.id}{" "}
+          </p>
+        </div>
       ))}
     </>
   );
