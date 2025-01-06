@@ -12,8 +12,14 @@ export const setupCanvas = (
   return canvas;
 };
 
-export const setupCanvasListeners = (canvas: Canvas) => {
+export const setupCanvasListeners = (canvas: Canvas, socket: WebSocket) => {
   canvas.on("object:added", (e) => {
+    socket.send(
+      JSON.stringify({
+        type: "canvas",
+        data: e.target.toJSON(),
+      }),
+    );
     console.log(e);
   });
 };

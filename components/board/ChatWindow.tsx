@@ -3,19 +3,27 @@
 import { useEffect, useState } from "react";
 import { useWebSocket } from "next-ws/client";
 
-export default function ChatWindow() {
+type Props = {
+  userId: string;
+};
+
+type Message = {
+  sender: string;
+  message: string;
+};
+
+export default function ChatWindow({ userId }: Props) {
   const ws = useWebSocket();
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState<string[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
 
   useEffect(() => {
-    console.log("this ran");
     async function onMessage(event: MessageEvent) {
-      console.log("got a message");
       const message =
         typeof event.data === "string" ? event.data : await event.data.text();
-      console.log(message);
-      setMessages((messages) => [...messages, message]);
+      const messageObject = JSON.parse(message);
+      if (messageObject.type != "chat") return;
+      setMessages((messages) => [...messages, messageObject.data]);
     }
 
     ws?.addEventListener("message", onMessage);
@@ -24,9 +32,18 @@ export default function ChatWindow() {
 
   const sendMessage = () => {
     console.log(ws);
-    ws?.send(message);
-    console.log(message);
-    setMessages((m) => [...m, message]);
+    const data = {
+      message,
+      sender: userId,
+    };
+
+    ws?.send(
+      JSON.stringify({
+        type: "chat",
+        data,
+      }),
+    );
+    setMessages((m) => [...m, data]);
     setMessage("");
   };
 
@@ -38,7 +55,10 @@ export default function ChatWindow() {
       >
         <div id="chat-messages">
           {messages.map((m, i) => (
-            <div key={i}>{m}</div>
+            <div key={i}>
+              <strong>{m.sender}: </strong>
+              {m.message}
+            </div>
           ))}
         </div>
       </div>

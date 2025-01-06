@@ -12,10 +12,11 @@ import Offcanvas from "react-bootstrap/Offcanvas";
 
 type Props = {
   id: number;
+  userId: string;
   inviteMemberAction: (email: string) => Promise<InviteMemberResponse>;
 };
 
-export default function Board({ id, inviteMemberAction }: Props) {
+export default function Board({ id, inviteMemberAction, userId }: Props) {
   const [activeControl, setActiveControl] = useState<ControlType>("pencil");
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [showChat, setShowChat] = useState(false);
@@ -49,7 +50,7 @@ export default function Board({ id, inviteMemberAction }: Props) {
           <Offcanvas.Title className="fw-bold">Chat</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
-          <ChatWindow />
+          <ChatWindow userId={userId} />
         </Offcanvas.Body>
       </Offcanvas>
       <div

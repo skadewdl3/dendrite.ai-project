@@ -2,6 +2,7 @@ import { setFreeDrawing } from "@/lib/fabric/drawing";
 import { setupCanvas, setupCanvasListeners } from "@/lib/fabric/init";
 import { ControlType } from "@/lib/types/control";
 import { Canvas as FabricCanvas } from "fabric";
+import { useWebSocket } from "next-ws/client";
 import { useEffect, useRef, useState } from "react";
 
 type Props = {
@@ -12,6 +13,7 @@ export default function Canvas({ tool }: Props) {
   const canvasEl = useRef(null);
   const canvasContainer = useRef(null);
   const [canvas, setCanvas] = useState<FabricCanvas | null>(null);
+  const ws = useWebSocket();
 
   useEffect(() => {
     if (!canvasEl.current || !canvasContainer.current) return;
@@ -21,7 +23,7 @@ export default function Canvas({ tool }: Props) {
     const canvasContext = setupCanvas(canvasEl.current, width, height);
     setFreeDrawing(canvasContext, true, tool);
     setCanvas(canvasContext);
-    setupCanvasListeners(canvasContext);
+    setupCanvasListeners(canvasContext, ws as WebSocket);
 
     return () => {
       canvas?.dispose();

@@ -1,9 +1,10 @@
-import { db, Board, eq, Invitation, User } from "@db";
+import { db, Board, eq, Invitation, User, arrayOverlaps, and } from "@db";
 import Button from "react-bootstrap/Button";
 import BoardComponent from "@/components/board/Board";
 import { InviteMemberResponse } from "@/lib/types/board";
 import { auth } from "@/lib/auth/server";
 import { headers } from "next/headers";
+import Container from "react-bootstrap/Container";
 
 export default async function BoardPage({
   params: paramsPromise,
@@ -12,25 +13,32 @@ export default async function BoardPage({
 }) {
   const params = await paramsPromise;
   const boardId = parseInt(params.boardId[0] as string);
+  const sessionData = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-  const board = await db.select().from(Board).where(eq(Board.id, boardId));
-  const invitations = await db
+  if (!sessionData) {
+    return (
+      <Container className="d-flex align-items-center justify-content-center min-vh-100">
+        <div className="text-center">
+          <h1 className="mt-4 mb-4">Welcome to QuickDraw</h1>
+          <p className="mb-4">You need to login to access a board.</p>
+        </div>
+      </Container>
+    );
+  }
+
+  const { user } = sessionData;
+
+  const board = await db
     .select()
-    .from(Invitation)
-    .where(eq(Invitation.boardId, boardId));
+    .from(Board)
+    .where(and(eq(Board.id, boardId), arrayOverlaps(Board.members, [user.id])));
 
   const inviteMemberAction = async (
     email: string,
   ): Promise<InviteMemberResponse> => {
     "use server";
-
-    const sessionData = await auth.api.getSession({
-      headers: await headers(),
-    });
-
-    if (!sessionData) {
-      return { error: "Unauthorized", success: false };
-    }
 
     const to = await db.select().from(User).where(eq(User.email, email));
     if (to.length == 0) {
@@ -59,8 +67,8 @@ export default async function BoardPage({
         <div>
           <h2 className="text-center mb-4">Board Not Found</h2>
           <p className="text-center text-muted mb-4">
-            Sorry, the board you're looking for doesn't exist or may have been
-            moved.
+            Sorry, the board you're looking for doesn't exist, or you do not
+            have access to this board.
           </p>
           <div className="text-center">
             <Button href="/" className="btn btn-primary">
@@ -75,7 +83,7 @@ export default async function BoardPage({
   return (
     <BoardComponent
       id={boardId}
-      invitations={invitations}
+      userId={user.id}
       inviteMemberAction={inviteMemberAction}
     />
   );

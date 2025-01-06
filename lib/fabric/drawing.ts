@@ -30,10 +30,11 @@ export const setFreeDrawing = (
   console.log("setting tool to: ", mode);
   if (mode == "pencil") {
     canvas.freeDrawingBrush = new PencilBrush(canvas);
+    canvas.freeDrawingBrush.color = "#ff0000";
   } else {
     canvas.freeDrawingBrush = new EraserBrush(canvas);
+    canvas.freeDrawingBrush.color = "#ffffff";
   }
-  canvas.freeDrawingBrush.color = "#ff0000";
   canvas.freeDrawingBrush.width = 5;
 
   console.log(enable, canvas.freeDrawingBrush);

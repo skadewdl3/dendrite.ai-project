@@ -32,6 +32,8 @@ export default function Controls({
       },
     ];
 
+  const staticControls = 1;
+
   return (
     <div className="d-flex position-relative" style={{ gap: "10px" }}>
       {controls.map((control, index) => (
@@ -72,7 +74,7 @@ export default function Controls({
           width: "40px",
           background: "#0d6efd",
           bottom: "-5px",
-          left: `calc(${(controls.findIndex((x) => x.name == activeControl) / controls.length) * 100}% + ${(controls.findIndex((x) => x.name == activeControl) / controls.length) * 10}px)`,
+          left: `calc(${(controls.findIndex((x) => x.name == activeControl) / (controls.length + staticControls)) * 100}% + ${(controls.findIndex((x) => x.name == activeControl) / (controls.length + staticControls)) * 10}px)`,
           transition: "left 0.3s ease-in-out",
           borderRadius: "5px",
         }}
