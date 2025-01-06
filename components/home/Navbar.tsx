@@ -33,7 +33,9 @@ const NavBar = ({ authenticated }: Props) => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
-            <Nav.Link href="/">Home</Nav.Link>
+            {authenticated && (
+              <Nav.Link href="/invitations">Invitations</Nav.Link>
+            )}
             <Nav.Link onClick={authenticated ? signOut : signIn}>
               {authenticated ? "Sign Out" : "Sign In"}
             </Nav.Link>

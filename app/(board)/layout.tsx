@@ -1,5 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import Navbar from "@/components/Navbar";
+import Navbar from "@/components/board/Navbar";
 import { headers } from "next/headers";
 import { auth } from "@auth/server";
 

@@ -1,6 +1,6 @@
 version: "3"
 services:
-  postgres_keycloak:
+  postgres:
     image: postgres:latest
     restart: always
     environment:
@@ -10,19 +10,8 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - postgres_keycloak_data:/var/lib/postgresql/data
-
-  postgres_app:
-    image: postgres:latest
-    restart: always
-    environment:
-      - POSTGRES_DB=app_db
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=password
-    ports:
-      - "5433:5432"
-    volumes:
-      - postgres_app_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker:/docker-entrypoint-initdb.d
 
   keycloak:
     image: keycloak/keycloak:latest
@@ -30,7 +19,7 @@ services:
       - KC_BOOTSTRAP_ADMIN_USERNAME=admin
       - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
       - KC_DB=postgres
-      - KC_DB_URL=jdbc:postgresql://postgres_keycloak:5432/keycloak_db
+      - KC_DB_URL=jdbc:postgresql://postgres:5432/keycloak_db
       - KC_DB_USERNAME=admin
       - KC_DB_PASSWORD=password
       - KC_HOSTNAME=localhost
@@ -45,11 +34,19 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - postgres_keycloak
+      - postgres
     command:
       - start-dev
       - --import-realm
 
+  # redis:
+  #   image: redis:latest
+  #   ports:
+  #     - "6379:6379"
+  #   command: redis-server --save 20 1 --loglevel warning
+  #   volumes:
+  #     - redis-data:/data
+
 volumes:
-  postgres_keycloak_data:
-  postgres_app_data:
+  postgres_data:
+  # redis-data:

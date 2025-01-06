@@ -9,7 +9,7 @@ import {
   DeleteBoardResponse,
 } from "@types/board";
 import Card from "react-bootstrap/Card";
-import NewBoardModal from "@/components/NewBoardModal";
+import NewBoardModal from "@/components/home/NewBoardModal";
 import { Trash, BoxArrowUpRight } from "react-bootstrap-icons";
 
 type Props = {

@@ -1,6 +1,9 @@
-import { db, Board, eq } from "@db";
+import { db, Board, eq, Invitation, User } from "@db";
 import Button from "react-bootstrap/Button";
 import BoardComponent from "@/components/board/Board";
+import { InviteMemberResponse } from "@/lib/types/board";
+import { auth } from "@/lib/auth/server";
+import { headers } from "next/headers";
 
 export default async function BoardPage({
   params: paramsPromise,
@@ -11,6 +14,41 @@ export default async function BoardPage({
   const boardId = parseInt(params.boardId[0] as string);
 
   const board = await db.select().from(Board).where(eq(Board.id, boardId));
+  const invitations = await db
+    .select()
+    .from(Invitation)
+    .where(eq(Invitation.boardId, boardId));
+
+  const inviteMemberAction = async (
+    email: string,
+  ): Promise<InviteMemberResponse> => {
+    "use server";
+
+    const sessionData = await auth.api.getSession({
+      headers: await headers(),
+    });
+
+    if (!sessionData) {
+      return { error: "Unauthorized", success: false };
+    }
+
+    const to = await db.select().from(User).where(eq(User.email, email));
+    if (to.length == 0) {
+      return { error: "User not found", success: false };
+    }
+
+    const toId = to[0].id;
+
+    console.log(to, boardId);
+
+    const { user } = sessionData;
+    const res = await db
+      .insert(Invitation)
+      .values({ boardId, from: user.id, to: toId })
+      .returning();
+
+    return { success: true, data: res };
+  };
 
   if (board.length == 0) {
     return (
@@ -34,5 +72,11 @@ export default async function BoardPage({
     );
   }
 
-  return <BoardComponent id={boardId} />;
+  return (
+    <BoardComponent
+      id={boardId}
+      invitations={invitations}
+      inviteMemberAction={inviteMemberAction}
+    />
+  );
 }
