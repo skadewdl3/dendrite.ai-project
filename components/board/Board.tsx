@@ -9,6 +9,7 @@ import ChatWindow from "./ChatWindow";
 import { ControlType } from "@/lib/types/control";
 import Canvas from "./Canvas";
 import Offcanvas from "react-bootstrap/Offcanvas";
+import Cursors from "./Cursors";
 
 type Props = {
   id: number;
@@ -71,6 +72,7 @@ export default function Board({ id, inviteMemberAction, userId }: Props) {
           chatOpen={showChat}
         />
       </div>
+      <Cursors />
     </WebSocketProvider>
   );
 }

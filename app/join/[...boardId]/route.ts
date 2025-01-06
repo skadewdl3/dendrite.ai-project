@@ -55,8 +55,31 @@ async function validateRequest(
   return { success: true, boardId, userId };
 }
 
+function getUniqueColor(boardId: number, limit = 10): string {
+  const clients = boardMembers.get(boardId) || new Set();
+  const usedColors = new Set([...clients].map((client) => client.color));
+
+  for (let i = 0; i < limit; i++) {
+    const color =
+      "#" +
+      Math.floor(Math.random() * 16777215)
+        .toString(16)
+        .padStart(6, "0");
+    if (!usedColors.has(color)) {
+      return color;
+    }
+  }
+
+  return null;
+}
+
+type Client = {
+  id: string;
+  color: string;
+};
+
 const connections = new Map<string, import("ws").WebSocket>();
-const boardMembers = new Map<number, Set<string>>();
+const boardMembers = new Map<number, Set<Client>>();
 
 export async function SOCKET(
   client: import("ws").WebSocket,
@@ -73,27 +96,55 @@ export async function SOCKET(
   const { userId, boardId } = res;
 
   const clients = boardMembers.get(boardId) || new Set();
-  clients.add(userId);
+  const clientData = {
+    id: userId,
+    color: getUniqueColor(boardId),
+  };
+  clients.add(clientData);
   boardMembers.set(boardId, clients);
 
   client.userId = userId;
   connections.set(userId, client);
 
-  client.on("message", (message) => {
-    console.log(message);
+  const { broadcast } = createHelpers(server, client, boardId);
 
-    const connectedClients = boardMembers.get(boardId);
-    if (!connectedClients) return;
-    server.clients.forEach((ws) => {
-      if (connectedClients.has(ws.userId) && client.userId !== ws.userId) {
-        console.log("sending memessage to ", ws.userId);
-        ws.send(message);
-      }
-    });
+  client.on("message", (message) => {
+    const messageData = JSON.parse(message.toString());
+    if (messageData.type == "mouse:move") {
+      messageData.data.color = clientData.color;
+      messageData.data.id = clientData.id;
+    }
+    broadcast(messageData);
   });
 
   client.on("close", () => {
-    boardMembers.get(boardId)?.delete(userId);
-    console.log("A client disconnected");
+    boardMembers.get(boardId)?.delete(clientData);
+    broadcast({ type: "client:disconnect", data: { id: clientData.id } });
   });
 }
+
+const createHelpers = (
+  server: import("ws").WebSocketServer,
+  client: import("ws").WebSocket,
+  boardId: number,
+): {
+  broadcast: (data: object) => void;
+} => {
+  const connectedClients = Array.from(boardMembers.get(boardId) || []).map(
+    (x) => x.id,
+  );
+  return {
+    broadcast: (data: object) => {
+      if (!connectedClients) return;
+      server.clients.forEach((ws) => {
+        if (
+          connectedClients.includes(ws.userId) &&
+          client.userId !== ws.userId
+        ) {
+          console.log("sending memessage to ", ws.userId);
+          ws.send(JSON.stringify(data));
+        }
+      });
+    },
+  };
+};
