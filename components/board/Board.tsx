@@ -7,6 +7,7 @@ import { InviteMemberResponse } from "@/lib/types/board";
 import InviteModal from "./InviteModal";
 import ChatWindow from "./ChatWindow";
 import { ControlType } from "@/lib/types/control";
+import Canvas from "./Canvas";
 
 type Props = {
   id: number;
@@ -35,6 +36,7 @@ export default function Board({ id, inviteMemberAction }: Props) {
         loading={false}
       />
       <ChatWindow />
+      <Canvas />
       <div style={{ width: "50%" }}>
         <Controls
           setActiveControl={setActiveControl}
