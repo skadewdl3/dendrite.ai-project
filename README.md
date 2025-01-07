@@ -14,8 +14,8 @@ This code is submitted as a work sample for evaluation as part of the internship
 ## Images
 ![image](https://github.com/user-attachments/assets/06f89bda-e3ba-4ce7-bbbd-baa6e603a3d4)
 ![image](https://github.com/user-attachments/assets/776c1266-8df2-425a-a72b-30847ab0c700)
-![image](https://github.com/user-attachments/assets/d1e79a94-60e9-424a-b077-61f99e886e5e)
-
+![image](https://github.com/user-attachments/assets/652da0ab-8075-48da-b019-39e02c89813f)
+![image](https://github.com/user-attachments/assets/a602f288-5583-4430-9b90-3ecbb8054e00)
 
 ## License and Usage Restrictions
 This code is proprietary and is provided solely for the purpose of evaluation by Dendrite.ai.
