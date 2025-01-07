@@ -11,28 +11,38 @@ import { useEffect, useRef, useState } from "react";
 
 type Props = {
   tool: ControlType;
+  initialData: string | null;
 };
 
-export default function Canvas({ tool }: Props) {
+export default function Canvas({ tool, initialData }: Props) {
   const canvasEl = useRef(null);
   const canvasContainer = useRef(null);
   const [canvas, setCanvas] = useState<FabricCanvas | null>(null);
   const ws = useWebSocket();
 
-  useEffect(() => {
+  const initializeAll = async () => {
     if (!canvasEl.current || !canvasContainer.current) return;
     const style = getComputedStyle(canvasContainer.current);
     const width = parseInt(style.getPropertyValue("width"));
     const height = parseInt(style.getPropertyValue("height"));
-    const canvasContext = setupCanvas(canvasEl.current, width, height);
+    const canvasContext = await setupCanvas({
+      canvasElement: canvasEl.current,
+      width,
+      height,
+      initialData,
+    });
     setFreeDrawing(canvasContext, true, tool);
     setCanvas(canvasContext);
     setupDocumentListeners(canvasContext);
     setupCanvasListeners(canvasContext, ws as WebSocket);
+  };
 
+  useEffect(() => {
+    initializeAll();
     return () => {
-      removeDocumentListeners(canvasContext);
-      canvasContext.dispose();
+      if (!canvas) return;
+      removeDocumentListeners(canvas);
+      canvas.dispose();
       setCanvas(null);
     };
   }, []);

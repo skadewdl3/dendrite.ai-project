@@ -1,4 +1,13 @@
-import { db, Board, eq, Invitation, User, arrayOverlaps, and } from "@db";
+import {
+  db,
+  Board,
+  eq,
+  Invitation,
+  User,
+  arrayOverlaps,
+  and,
+  BoardData,
+} from "@db";
 import Button from "react-bootstrap/Button";
 import BoardComponent from "@/components/board/Board";
 import { InviteMemberResponse } from "@/lib/types/board";
@@ -34,6 +43,10 @@ export default async function BoardPage({
     .select()
     .from(Board)
     .where(and(eq(Board.id, boardId), arrayOverlaps(Board.members, [user.id])));
+  const boardData = await db
+    .select()
+    .from(BoardData)
+    .where(eq(BoardData.boardId, boardId));
 
   const inviteMemberAction = async (
     email: string,
@@ -83,6 +96,7 @@ export default async function BoardPage({
   return (
     <BoardComponent
       id={boardId}
+      boardData={boardData[0].data}
       userId={user.id}
       inviteMemberAction={inviteMemberAction}
     />

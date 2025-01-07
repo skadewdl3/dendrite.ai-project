@@ -163,13 +163,6 @@ export async function SOCKET(
       boardMembers.delete(boardId);
     }
   });
-
-  client.send(
-    JSON.stringify({
-      type: "client:connect",
-      data: { board: canvases.get(boardId), id: clientData.id },
-    }),
-  );
 }
 
 const createHelpers = (

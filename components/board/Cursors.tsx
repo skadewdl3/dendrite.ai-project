@@ -17,6 +17,8 @@ export default function Cursors() {
   const [clients, setClients] = useState<CursorData[]>([]);
 
   const onMouseMove = throttle((event: MouseEvent) => {
+    if (!ws) return;
+    console.log("this sent");
     ws?.send(
       JSON.stringify({
         type: "mouse:move",

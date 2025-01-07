@@ -15,9 +15,15 @@ type Props = {
   id: number;
   userId: string;
   inviteMemberAction: (email: string) => Promise<InviteMemberResponse>;
+  boardData: string | null;
 };
 
-export default function Board({ id, inviteMemberAction, userId }: Props) {
+export default function Board({
+  id,
+  inviteMemberAction,
+  userId,
+  boardData,
+}: Props) {
   const [activeControl, setActiveControl] = useState<ControlType>("pencil");
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [showChat, setShowChat] = useState(false);
@@ -40,7 +46,7 @@ export default function Board({ id, inviteMemberAction, userId }: Props) {
         loading={false}
       />
 
-      <Canvas tool={activeControl} />
+      <Canvas tool={activeControl} initialData={boardData} />
       <Offcanvas
         show={showChat}
         onHide={() => setShowChat(false)}

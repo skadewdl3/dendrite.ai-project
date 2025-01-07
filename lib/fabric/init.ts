@@ -2,15 +2,26 @@ import { Canvas, FabricObject, Rect, util } from "fabric";
 import { pushToUndoStack, setRedoStack } from "./undo-redo";
 import { v4 as uuid } from "uuid";
 
-export const setupCanvas = (
-  canvasElement: HTMLCanvasElement,
-  width: number,
-  height: number,
-) => {
+type SetupCanvasInput = {
+  canvasElement: HTMLCanvasElement;
+  width: number;
+  height: number;
+  initialData: string | null;
+};
+
+export const setupCanvas = async ({
+  canvasElement,
+  width,
+  height,
+  initialData,
+}: SetupCanvasInput): Promise<Canvas> => {
   console.log(width, height);
   FabricObject.customProperties = ["id"];
   const canvas = new Canvas(canvasElement);
   canvas.setDimensions({ width, height });
+  if (!initialData) return canvas;
+
+  await canvas.loadFromJSON(initialData);
   return canvas;
 };
 
