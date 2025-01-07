@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "patch": "npx next-ws-cli@latest patch --yes",
+    "dev": "npm run patch && next dev --turbopack",
     "build": "next build",
     "start": "next start",
     "up": "docker volume prune -f && docker compose up",
