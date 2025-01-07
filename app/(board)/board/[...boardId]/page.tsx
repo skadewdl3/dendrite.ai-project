@@ -48,6 +48,7 @@ export default async function BoardPage({
     .from(BoardData)
     .where(eq(BoardData.boardId, boardId));
 
+  console.log(boardData);
   const inviteMemberAction = async (
     email: string,
   ): Promise<InviteMemberResponse> => {

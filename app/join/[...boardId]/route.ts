@@ -119,7 +119,8 @@ export async function SOCKET(
       .where(eq(BoardData.boardId, boardId));
     if (canvasData.length == 0) return;
     const canvas = new Canvas();
-    if (canvasData != null) {
+    if (canvasData[0].data != null) {
+      console.log(canvasData[0]);
       await canvas.loadFromJSON(canvasData[0].data);
     }
     canvases.set(boardId, canvas);

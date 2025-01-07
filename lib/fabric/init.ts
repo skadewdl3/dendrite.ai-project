@@ -19,9 +19,12 @@ export const setupCanvas = async ({
   FabricObject.customProperties = ["id"];
   const canvas = new Canvas(canvasElement);
   canvas.setDimensions({ width, height });
-  if (!initialData) return canvas;
+  if (initialData) {
+    await canvas.loadFromJSON(initialData);
+  }
 
-  await canvas.loadFromJSON(initialData);
+  canvas.backgroundColor = "#ffffff";
+  canvas.renderAll();
   return canvas;
 };
 

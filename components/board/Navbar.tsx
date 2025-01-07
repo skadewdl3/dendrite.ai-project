@@ -36,7 +36,7 @@ const NavBar = ({ authenticated }: Props) => {
   return (
     <Navbar bg="light" expand="lg" className="fixed-top">
       <Container>
-        <Navbar.Brand href="#home">QuickDraw</Navbar.Brand>
+        <Navbar.Brand href="/">QuickDraw</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">

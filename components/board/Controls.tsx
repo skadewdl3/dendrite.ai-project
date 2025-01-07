@@ -6,6 +6,9 @@ import {
   ArrowClockwise,
   ArrowCounterclockwise,
   CircleFill,
+  Save,
+  FilePdf,
+  Image as ImageIcon,
 } from "react-bootstrap-icons";
 import Button from "react-bootstrap/Button";
 import type { ControlType } from "@types/control";
@@ -64,6 +67,17 @@ export default function Controls({
     const event = new CustomEvent("thickness", { detail: { thickness } });
     document.dispatchEvent(event);
   };
+
+  const saveAsImage = () => {
+    const event = new CustomEvent("save:img");
+    document.dispatchEvent(event);
+  };
+
+  const saveAsPdf = () => {
+    const event = new CustomEvent("save:pdf");
+    document.dispatchEvent(event);
+  };
+
   const colors = [
     "#FF0000", // Red
     "#00FF00", // Green
@@ -212,6 +226,45 @@ export default function Controls({
             }}
           >
             <Chat />
+          </Button>
+        </Tooltip>
+      </div>
+
+      <div
+        className="d-flex position-relative"
+        style={{
+          gap: "10px",
+          border: "1px solid #ccc",
+          padding: "10px",
+          borderRadius: "5px",
+          marginLeft: "10px",
+        }}
+      >
+        <Tooltip text="Save as Image">
+          <Button
+            onClick={saveAsImage}
+            variant="light"
+            className="d-flex align-items-center justify-content-center"
+            style={{
+              width: "40px",
+              height: "40px",
+            }}
+          >
+            <ImageIcon />
+          </Button>
+        </Tooltip>
+
+        <Tooltip text="Save as PDF">
+          <Button
+            onClick={saveAsPdf}
+            variant="light"
+            className="d-flex align-items-center justify-content-center"
+            style={{
+              width: "40px",
+              height: "40px",
+            }}
+          >
+            <FilePdf />
           </Button>
         </Tooltip>
       </div>
