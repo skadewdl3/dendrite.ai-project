@@ -1,4 +1,4 @@
-import { Board, BoardData, db, eq, and, arrayOverlaps } from "@db";
+import { Board, BoardData, db, eq, and, arrayOverlaps, User } from "@db";
 import { auth } from "@auth/server";
 import { fromNodeHeaders } from "better-auth/node";
 import { Canvas, util, FabricObject } from "fabric/node";
@@ -77,6 +77,7 @@ function getUniqueColor(boardId: number, limit = 10): string {
 }
 
 type Client = {
+  name: string;
   id: string;
   color: string;
 };
@@ -98,9 +99,15 @@ export async function SOCKET(
   }
 
   const { userId, boardId } = res;
+  const name = await db
+    .select({ name: User.name })
+    .from(User)
+    .where(eq(User.id, userId));
+  if (name.length == 0) return;
 
   const clients = boardMembers.get(boardId) || new Set();
   const clientData = {
+    name: name[0].name,
     id: userId,
     color: getUniqueColor(boardId),
   };
@@ -127,8 +134,7 @@ export async function SOCKET(
   client.on("message", async (message) => {
     const messageData = JSON.parse(message.toString());
     if (messageData.type == "mouse:move") {
-      messageData.data.color = clientData.color;
-      messageData.data.id = clientData.id;
+      messageData.data = { ...messageData.data, ...clientData };
     }
     if (messageData.type.startsWith("canvas:")) {
       const canvas = canvases.get(boardId);

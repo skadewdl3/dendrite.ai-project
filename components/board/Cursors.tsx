@@ -7,6 +7,7 @@ import { throttle } from "underscore";
 
 type CursorData = {
   id: string;
+  name: string;
   color: string;
   x: number;
   y: number;
@@ -18,7 +19,6 @@ export default function Cursors() {
 
   const onMouseMove = throttle((event: MouseEvent) => {
     if (!ws) return;
-    console.log("this sent");
     ws?.send(
       JSON.stringify({
         type: "mouse:move",
@@ -91,7 +91,7 @@ export default function Cursors() {
               transition: "all 0.5s ease-in-out",
             }}
           >
-            {data.id}{" "}
+            {data.name}{" "}
           </p>
         </div>
       ))}
