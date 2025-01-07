@@ -66,9 +66,6 @@ export default function Board({
           left: "50%",
           transform: "translateX(-50%)",
           bottom: "10px",
-          border: "1px solid #ccc",
-          padding: "10px",
-          borderRadius: "5px",
         }}
       >
         <Controls

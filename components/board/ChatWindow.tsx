@@ -22,6 +22,7 @@ export default function ChatWindow({ userId }: Props) {
       const message =
         typeof event.data === "string" ? event.data : await event.data.text();
       const messageObject = JSON.parse(message);
+      console.log("chat received");
       if (messageObject.type != "chat") return;
       setMessages((messages) => [...messages, messageObject.data]);
     }
@@ -34,7 +35,7 @@ export default function ChatWindow({ userId }: Props) {
     console.log(ws);
     const data = {
       message,
-      sender: userId,
+      sender: "You",
     };
 
     ws?.send(

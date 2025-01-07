@@ -1,3 +1,7 @@
+import {
+  removeColorThicknessListeners,
+  setupColorThicknessListeners,
+} from "@/lib/fabric/color-thickness";
 import { setFreeDrawing } from "@/lib/fabric/drawing";
 import { setupCanvas, setupCanvasListeners } from "@/lib/fabric/init";
 import {
@@ -35,6 +39,7 @@ export default function Canvas({ tool, initialData }: Props) {
     setCanvas(canvasContext);
     setupDocumentListeners(canvasContext);
     setupCanvasListeners(canvasContext, ws as WebSocket);
+    setupColorThicknessListeners(canvasContext);
   };
 
   useEffect(() => {
@@ -42,6 +47,7 @@ export default function Canvas({ tool, initialData }: Props) {
     return () => {
       if (!canvas) return;
       removeDocumentListeners(canvas);
+      removeColorThicknessListeners(canvasContext);
       canvas.dispose();
       setCanvas(null);
     };

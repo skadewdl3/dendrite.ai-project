@@ -135,8 +135,9 @@ export async function SOCKET(
     const messageData = JSON.parse(message.toString());
     if (messageData.type == "mouse:move") {
       messageData.data = { ...messageData.data, ...clientData };
-    }
-    if (messageData.type.startsWith("canvas:")) {
+    } else if (messageData.type == "chat") {
+      messageData.data = { ...messageData.data, sender: clientData.name };
+    } else if (messageData.type.startsWith("canvas:")) {
       const canvas = canvases.get(boardId);
       if (!canvas) return;
       const changes = await util.enlivenObjects([messageData.data]);
