@@ -7,8 +7,15 @@ This code is submitted as a work sample for evaluation as part of the internship
 1. Clone this repository.
 2. Make sure you have docker installed (needed for keycloak and postgres containers.)
 2. Run `npm run up` to start the keycloak and postgres docker containers.
-3. In another terminal, run `npm run dev` to patch Next.js for websockets, and start the app.
-4. Open up `localhost:3000` to access the website.
+3. Install packages using `npm install`.
+4. In another terminal, run `npm run dev` to patch Next.js for websockets, and start the app.
+5. Open up `localhost:3000` to access the website.
+
+## Images
+![image](https://github.com/user-attachments/assets/06f89bda-e3ba-4ce7-bbbd-baa6e603a3d4)
+![image](https://github.com/user-attachments/assets/776c1266-8df2-425a-a72b-30847ab0c700)
+![image](https://github.com/user-attachments/assets/d1e79a94-60e9-424a-b077-61f99e886e5e)
+
 
 ## License and Usage Restrictions
 This code is proprietary and is provided solely for the purpose of evaluation by Dendrite.ai.
