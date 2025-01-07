@@ -16,6 +16,8 @@ export class EraserBrush extends PencilBrush {
   }
 }
 
+let prevBrush = null;
+
 export const setFreeDrawing = (
   canvas: Canvas,
   enable: boolean,
@@ -27,10 +29,16 @@ export const setFreeDrawing = (
     return;
   }
 
+  prevBrush = canvas.freeDrawingBrush;
   if (mode == "pencil") {
     canvas.freeDrawingBrush = new PencilBrush(canvas);
+    if (!prevBrush) return;
+    canvas.freeDrawingBrush.width = prevBrush.width;
+    canvas.freeDrawingBrush.color = prevBrush.color;
   } else {
     canvas.freeDrawingBrush = new EraserBrush(canvas);
+    if (!prevBrush) return;
+    canvas.freeDrawingBrush.width = prevBrush.width;
     canvas.freeDrawingBrush.color = "#ffffff";
   }
   console.log(enable, canvas.freeDrawingBrush);
