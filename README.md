@@ -1,7 +1,13 @@
 # Project Title
 
 ## Description
-This code is submitted as a work sample for evaluation as part of the internship application process at Dendrite.ai. It demonstrates my skills in [briefly describe the functionality of the project, e.g., "building a responsive web application" or "implementing machine learning algorithms"].
+This code is submitted as a work sample for evaluation as part of the internship application process at Dendrite.ai. It demonstrates my skills in React, Next.js, Fabric.js, Bootstrap, WebSockets and Docker.
+
+## Instructions to run
+1. Clone this repository.
+2. Run `npm run up` to start the keycloak and postgres docker containers.
+3. In another terminal, run `npm run dev` to patch Next.js for websockets, and start the app.
+4. Open up `localhost:3000` to access the website.
 
 ## License and Usage Restrictions
 This code is proprietary and is provided solely for the purpose of evaluation by Dendrite.ai.
