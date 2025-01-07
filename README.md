@@ -1,10 +1,11 @@
 # Project Title
 
 ## Description
-This code is submitted as a work sample for evaluation as part of the internship application process at Dendrite.ai. It demonstrates my skills in React, Next.js, Fabric.js, Bootstrap, WebSockets and Docker.
+This code is submitted as a work sample for evaluation as part of the internship application process at Dendrite.ai. It demonstrates my skills in React, Next.js, Fabric.js, Bootstrap, OAuth (using Keycloak), WebSockets and Docker.
 
 ## Instructions to run
 1. Clone this repository.
+2. Make sure you have docker installed (needed for keycloak and postgres containers.)
 2. Run `npm run up` to start the keycloak and postgres docker containers.
 3. In another terminal, run `npm run dev` to patch Next.js for websockets, and start the app.
 4. Open up `localhost:3000` to access the website.
