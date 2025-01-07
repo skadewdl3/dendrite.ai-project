@@ -38,7 +38,7 @@ export default function Controls({
       },
     ];
 
-  const staticControls = 1;
+  const staticControls = 3;
 
   const undo = () => {
     const event = new Event("undo");

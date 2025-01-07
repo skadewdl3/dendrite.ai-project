@@ -1,4 +1,4 @@
-import { Board, db, arrayOverlaps, eq } from "@db";
+import { Board, db, arrayOverlaps, eq, BoardData, Invitation } from "@db";
 import Home from "@/components/home/Home";
 import { auth } from "@auth/server";
 import { headers } from "next/headers";
@@ -38,6 +38,11 @@ export default async function HomePage() {
       .values({ ...data, members: [user.id], updatedAt: new Date() })
       .returning();
 
+    const res2 = await db.insert(BoardData).values({
+      boardId: res[0].id,
+      data: null,
+    });
+
     return { success: true, data: res };
   };
 
@@ -48,6 +53,8 @@ export default async function HomePage() {
 
     if (id < 0) return { success: false, error: "Board ID cannot be negative" };
 
+    await db.delete(Invitation).where(eq(Invitation.boardId, id)).returning();
+    await db.delete(BoardData).where(eq(BoardData.boardId, id)).returning();
     const res = await db.delete(Board).where(eq(Board.id, id)).returning();
 
     return { success: true, data: res };

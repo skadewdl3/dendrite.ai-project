@@ -1,6 +1,9 @@
-import { Board, db, eq, and, arrayOverlaps } from "@db";
+import { Board, BoardData, db, eq, and, arrayOverlaps } from "@db";
 import { auth } from "@auth/server";
 import { fromNodeHeaders } from "better-auth/node";
+import { Canvas, util, FabricObject } from "fabric/node";
+
+FabricObject.customProperties = ["id"];
 
 type ValidationResponse =
   | {
@@ -80,6 +83,7 @@ type Client = {
 
 const connections = new Map<string, import("ws").WebSocket>();
 const boardMembers = new Map<number, Set<Client>>();
+const canvases = new Map<number, Canvas>();
 
 export async function SOCKET(
   client: import("ws").WebSocket,
@@ -101,6 +105,18 @@ export async function SOCKET(
     color: getUniqueColor(boardId),
   };
   clients.add(clientData);
+  if (!canvases.has(boardId)) {
+    const canvasData = await db
+      .select()
+      .from(BoardData)
+      .where(eq(BoardData.boardId, boardId));
+    if (canvasData.length == 0) return;
+    const canvas = new Canvas();
+    if (canvasData != null) {
+      await canvas.loadFromJSON(canvasData[0].data);
+    }
+    canvases.set(boardId, canvas);
+  }
   boardMembers.set(boardId, clients);
 
   client.userId = userId;
@@ -108,19 +124,52 @@ export async function SOCKET(
 
   const { broadcast } = createHelpers(server, client, boardId);
 
-  client.on("message", (message) => {
+  client.on("message", async (message) => {
     const messageData = JSON.parse(message.toString());
     if (messageData.type == "mouse:move") {
       messageData.data.color = clientData.color;
       messageData.data.id = clientData.id;
     }
+    if (messageData.type.startsWith("canvas:")) {
+      const canvas = canvases.get(boardId);
+      if (!canvas) return;
+      const changes = await util.enlivenObjects([messageData.data]);
+
+      if (messageData.type == "canvas:add") {
+        changes.forEach((obj) => canvas.add(obj));
+      } else {
+        changes.forEach((obj) => canvas.remove(obj));
+      }
+      canvas.renderAll();
+    }
+
+    broadcast(messageData);
+    await db
+      .update(BoardData)
+      .set({
+        data: canvases.get(boardId)?.toDatalessJSON(["id"]) || null,
+      })
+      .where(eq(BoardData.boardId, boardId));
+
     broadcast(messageData);
   });
 
   client.on("close", () => {
     boardMembers.get(boardId)?.delete(clientData);
     broadcast({ type: "client:disconnect", data: { id: clientData.id } });
+
+    if (boardMembers.get(boardId)?.size == 0) {
+      canvases.delete(boardId);
+      boardMembers.delete(boardId);
+    }
   });
+
+  client.send(
+    JSON.stringify({
+      type: "client:connect",
+      data: { board: canvases.get(boardId), id: clientData.id },
+    }),
+  );
 }
 
 const createHelpers = (

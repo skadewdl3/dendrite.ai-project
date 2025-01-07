@@ -11,7 +11,6 @@ export const setupCanvas = (
   FabricObject.customProperties = ["id"];
   const canvas = new Canvas(canvasElement);
   canvas.setDimensions({ width, height });
-  canvas.add(new Rect({ width: 20, height: 20, fill: "#ff0000" }));
   return canvas;
 };
 
@@ -54,6 +53,11 @@ export const setupCanvasListeners = (canvas: Canvas, socket: WebSocket) => {
     const { type, data: changes } = JSON.parse(message);
     if (type == "canvas:add") await canvasAdd(canvas, changes);
     else if (type == "canvas:remove") await canvasRemove(canvas, changes);
+    else if (type == "client:connect") {
+      console.log(changes);
+      await canvas.loadFromJSON(changes.board);
+      canvas.renderAll();
+    }
 
     // const path = new Path(changes);
   });

@@ -30,6 +30,14 @@ export const Board = pgTable("_board", {
   public: boolean("public").default(false).notNull(),
   description: text("description"),
 });
+
+export const BoardData = pgTable("_board_data", {
+  boardId: serial("board_id")
+    .references(() => Board.id)
+    .notNull(),
+  data: text("data"),
+});
+
 export const Invitation = pgTable(
   "_invitation",
   {
