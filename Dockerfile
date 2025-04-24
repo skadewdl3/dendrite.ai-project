@@ -69,6 +69,8 @@ EXPOSE 3000
 
 # Set the hostname to listen on all interfaces
 ENV HOSTNAME "0.0.0.0"
-
+# Pass environment variables
+ENV BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
+ENV DATABASE_URL=${DATABASE_URL}
 # Start the application
 CMD ["node", "server.js"]
