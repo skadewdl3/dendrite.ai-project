@@ -65,7 +65,7 @@ export default function Cursors() {
       ws?.removeEventListener("message", onMessage);
       document.removeEventListener("mousemove", onMouseMove);
     };
-  }, []);
+  });
 
   useEffect(() => {});
 

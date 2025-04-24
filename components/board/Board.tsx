@@ -37,8 +37,13 @@ export default function Board({
     };
   });
 
+  const BASE_URL =
+    process.env.NODE_ENV == "development"
+      ? process.env.NEXT_PUBLIC_DEV_BASE_URL
+      : process.env.NEXT_PUBLIC_PROD_BASE_URL;
+
   return (
-    <WebSocketProvider url={`ws://localhost:3000/join/${id}`}>
+    <WebSocketProvider url={`ws://${BASE_URL}/join/${id}`}>
       <InviteModal
         show={showInviteModal}
         handleClose={() => setShowInviteModal(false)}
