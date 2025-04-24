@@ -11,7 +11,7 @@ import {
   Image as ImageIcon,
 } from "react-bootstrap-icons";
 import Button from "react-bootstrap/Button";
-import type { ControlType } from "@types/control";
+import type { ControlType } from "@/lib/types/control";
 import { ReactNode, useEffect, useState } from "react";
 import Tooltip from "@/components/Tooltip";
 import Dropdown from "./Dropdown";

@@ -7,7 +7,7 @@ import {
   CreateBoardResponse,
   DeleteBoardInput,
   DeleteBoardResponse,
-} from "@types/board";
+} from "@/lib/types/board";
 import HomeUnauthorized from "@/components/home/HomeUnauthorized";
 
 export default async function HomePage() {

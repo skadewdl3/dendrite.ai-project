@@ -1,7 +1,7 @@
 "use client";
 import Button from "react-bootstrap/Button";
 import { useEffect } from "react";
-import { Invitation } from "@types/board";
+import { Invitation } from "@/lib/types/board";
 
 type Props = {
   invitations: Invitation[];

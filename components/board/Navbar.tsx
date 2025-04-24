@@ -3,8 +3,7 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { authClient } from "@auth/client";
-import InviteModal from "./InviteModal";
-import { useState } from "react";
+import { redirect } from "next/navigation";
 
 type Props = {
   authenticated: boolean;
@@ -22,10 +21,7 @@ const NavBar = ({ authenticated }: Props) => {
   };
 
   const signIn = () => {
-    authClient.signIn.oauth2({
-      providerId: "keycloak",
-      callbackURL: "/",
-    });
+    redirect("/login");
   };
 
   const openInviteNav = () => {

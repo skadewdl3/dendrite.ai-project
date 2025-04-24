@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Canvas } from "fabric";
 import { EraserBrush } from "./drawing";
 

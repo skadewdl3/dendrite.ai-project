@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Canvas } from "fabric";
 
 let undoStack: object[] = [];

@@ -7,7 +7,7 @@ import {
   Board,
   DeleteBoardInput,
   DeleteBoardResponse,
-} from "@types/board";
+} from "@/lib/types/board";
 import Card from "react-bootstrap/Card";
 import NewBoardModal from "@/components/home/NewBoardModal";
 import { Trash, BoxArrowUpRight } from "react-bootstrap-icons";

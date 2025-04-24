@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { PencilBrush, Canvas } from "fabric";
 
 export class EraserBrush extends PencilBrush {

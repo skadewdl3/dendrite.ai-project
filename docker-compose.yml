@@ -4,7 +4,7 @@ services:
     image: postgres:latest
     restart: always
     environment:
-      - POSTGRES_DB=keycloak_db
+      - POSTGRES_DB=db
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=password
     ports:
@@ -12,32 +12,6 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./docker/sql:/docker-entrypoint-initdb.d
-
-  keycloak:
-    image: keycloak/keycloak:latest
-    environment:
-      - KC_BOOTSTRAP_ADMIN_USERNAME=admin
-      - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
-      - KC_DB=postgres
-      - KC_DB_URL=jdbc:postgresql://postgres:5432/keycloak_db
-      - KC_DB_USERNAME=admin
-      - KC_DB_PASSWORD=password
-      - KC_HOSTNAME=localhost
-
-      - KC_CLIENT_SECRET=QUykrywkGszhxxYgsSBtSNtHsFIWaYHK
-      - "KC_CLIENT_ID=dendrite.ai-project"
-      - KC_CLIENT_NAME=Dendrite AI Project
-      - KC_REALM_NAME=realm
-
-    volumes:
-      - ./docker/keycloak-config.json:/opt/keycloak/data/import/keycloak-config.json
-    ports:
-      - "8080:8080"
-    depends_on:
-      - postgres
-    command:
-      - start-dev
-      - --import-realm
 
 volumes:
   postgres_data:

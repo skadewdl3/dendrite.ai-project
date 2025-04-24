@@ -22,10 +22,15 @@
       "@/*": ["./*"],
       "@db": ["./lib/drizzle/db.ts"],
       "@auth/*": ["./lib/auth/*"],
-      "@env": ["./lib/env.ts"],
-      "@types/*": ["./lib/types/*"]
+      "@env": ["./lib/env.ts"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "app/(index)/signup"
+  ],
   "exclude": ["node_modules"]
 }

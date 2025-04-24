@@ -7,6 +7,10 @@ import "@env";
 
 // Create a new instance of the authentication library, better-auth
 export const auth = betterAuth({
+  emailAndPassword: {
+    enabled: true,
+  },
+
   // We;re using Drizzle as the ORM, so we'll need to use an adapter to allow better-auth to use it
   database: drizzleAdapter(db, {
     provider: "pg",

@@ -3,7 +3,7 @@ import Invitations from "@/components/invitations/Invitations";
 import { auth } from "@auth/server";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import type { Invitation as InvitationType } from "@types/board";
+import type { Invitation as InvitationType } from "@/lib/types/board";
 
 export default async function HomePage() {
   const sessionData = await auth.api.getSession({

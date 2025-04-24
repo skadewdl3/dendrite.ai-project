@@ -1,0 +1,12 @@
+runtime: nodejs20 # or nodejs18, depending on your needs
+
+instance_class: F2
+
+handlers:
+  - url: /.*
+    secure: always
+    script: auto
+
+env_variables:
+  NODE_ENV: "production"
+  BETTER_AUTH_SECRET: RhHHn0pezQT4w1pfGM9dZJEMwhf2Oj1I

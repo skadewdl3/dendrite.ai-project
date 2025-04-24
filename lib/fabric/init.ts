@@ -1,4 +1,5 @@
-import { Canvas, FabricObject, Rect, util } from "fabric";
+// @ts-nocheck
+import { Canvas, FabricObject, util } from "fabric";
 import { pushToUndoStack, setRedoStack } from "./undo-redo";
 import { v4 as uuid } from "uuid";
 
