@@ -13,6 +13,8 @@
 import { defineConfig } from "drizzle-kit";
 import "@/lib/env";
 
+console.log("url is: ", process.env.DATABASE_URL);
+
 export default defineConfig({
   schema: "./lib/drizzle/schema",
   out: "./lib/drizzle/migrations",
