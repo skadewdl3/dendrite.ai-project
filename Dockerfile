@@ -3,6 +3,12 @@
 # Stage 1: Dependencies and build stage
 FROM node:22-bullseye AS deps
 
+# Add environment variables
+ENV BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
+ENV DATABASE_URL=${DATABASE_URL}
+ENV NEXT_PUBLIC_PROD_BASE_URL=dendrite-ai-project.onrender.com:3000
+ENV NEXT_PUBLIC_DEV_BASE_URL=localhost:3000
+
 # Install build dependencies for canvas (using Debian packages instead of Alpine)
 RUN apt-get update && apt-get install -y \
     build-essential \
@@ -27,6 +33,12 @@ RUN npm i
 FROM node:22-bullseye AS builder
 WORKDIR /app
 
+# Add environment variables
+ENV BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
+ENV DATABASE_URL=${DATABASE_URL}
+ENV NEXT_PUBLIC_PROD_BASE_URL=dendrite-ai-project.onrender.com:3000
+ENV NEXT_PUBLIC_DEV_BASE_URL=localhost:3000
+
 # Copy node_modules from deps stage
 COPY --from=deps /app/node_modules ./node_modules
 # Copy the rest of the application
@@ -38,6 +50,12 @@ RUN npm run build
 # Stage 3: Production runtime
 FROM node:22-bullseye-slim AS runner
 WORKDIR /app
+
+# Add environment variables
+ENV BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
+ENV DATABASE_URL=${DATABASE_URL}
+ENV NEXT_PUBLIC_PROD_BASE_URL=dendrite-ai-project.onrender.com:3000
+ENV NEXT_PUBLIC_DEV_BASE_URL=localhost:3000
 
 # Install runtime dependencies for canvas
 RUN apt-get update && apt-get install -y \
@@ -69,8 +87,6 @@ EXPOSE 3000
 
 # Set the hostname to listen on all interfaces
 ENV HOSTNAME "0.0.0.0"
-# Pass environment variables
-ENV BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
-ENV DATABASE_URL=${DATABASE_URL}
+
 # Start the application
 CMD ["node", "server.js"]
