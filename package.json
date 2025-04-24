@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "patch": "npx next-ws-cli@latest patch --yes",
+    "prepare": "npx next-ws-cli@latest patch --yes",
     "dev": "npm run patch && next dev --turbopack",
     "build": "next build",
     "start": "next start",

@@ -1,3 +1,4 @@
+export const runtime = "nodejs";
 // @ts-nocheck
 import { Board, BoardData, db, eq, and, arrayOverlaps, User } from "@db";
 import { auth } from "@auth/server";
