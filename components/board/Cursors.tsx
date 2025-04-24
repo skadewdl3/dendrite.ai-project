@@ -17,7 +17,7 @@ export default function Cursors() {
   const ws = useWebSocket();
   const [clients, setClients] = useState<CursorData[]>([]);
 
-  const onMouseMove = throttle((event: MouseEvent) => {
+  const onMouseMove = async (event: MouseEvent) => {
     if (!ws) return;
     ws?.send(
       JSON.stringify({
@@ -28,9 +28,9 @@ export default function Cursors() {
         },
       }),
     );
-  }, 500);
+  };
 
-  const onMessage = throttle(async (event: MessageEvent) => {
+  const onMessage = async (event: MessageEvent) => {
     const message =
       typeof event.data === "string" ? event.data : await event.data.text();
 
@@ -55,7 +55,7 @@ export default function Cursors() {
 
       setClients((clients) => clients.filter((client) => client.id != data.id));
     }
-  }, 100);
+  };
 
   useEffect(() => {
     ws?.addEventListener("message", onMessage);
